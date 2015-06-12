@@ -1,0 +1,32 @@
+### Windows ###
+# -----------
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msm
+*.msp
+*.lnk
+
+### NotePad++ ###
+# -------------
+nppBackup/
+
+### NetBeans ###
+# ------------
+nbproject/
+
+### Composer ###
+# ----------
+composer.bat
+composer/
+vendor/
+
+### Projet ###
+# ----------
+*.log
+*.log.txt
+*.cache
+*.cache.txt

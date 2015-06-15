@@ -26,37 +26,51 @@
 
 namespace Core\Vue;
 
+if (!defined('WEBROOT')) {
+	define('DS', DIRECTORY_SEPARATOR);
+	define('WS', '/');
+	define('ROOT', __DIR__ . DS);
+	$dir = basename(ROOT);
+	$tabUrl = explode($dir, $_SERVER['REQUEST_URI']);
+	if (count($tabUrl) > 1) {
+		define('WEBROOT', $tabUrl[0] . $dir . WS);
+	} else {
+		define('WEBROOT', WS);
+	}
+}
+
 /**
  *
  * @author fabien.sanchez
  */
 trait TraitVueStyle {
 
-    private $Styles = array();
+	static $DossierStyle = __DIR__ . '\..\..\style';
+	private $Styles = array();
 
-    public function addStyle($style) {
-        $key = md5($style);
-        $this->Styles[$key] = '<style>' . $style . '</style>';
-        return $this;
-    }
+	public function addStyle($style) {
+		$key = md5($style);
+		$this->Styles[$key] = '<style>' . $style . '</style>';
+		return $this;
+	}
 
-    public function addFileStyle($fileName) {
-        $key = md5($fileName);
-        $path_file = $fileName . '.css';
-        $web_file = concatPath(WEBROOT . '/style', $path_file, WS);
-        $sys_file = concatPath(ROOT . '/style', $path_file, DS);
-        if (file_exists($sys_file)) {
-            $this->Styles[$key] = '<link type="text/css" href="' . $web_file . '" rel="stylesheet" />';
-        }
-        return $this;
-    }
+	public function addFileStyle($fileName) {
+		$key = md5($fileName);
+		$path_file = $fileName . '.css';
+		$web_file = concatPath(WEBROOT . '/style', $path_file, WS);
+		$sys_file = concatPath(static::$DossierStyle, $path_file, DS);
+		if (file_exists($sys_file)) {
+			$this->Styles[$key] = '<link type="text/css" href="' . $web_file . '" rel="stylesheet" />';
+		}
+		return $this;
+	}
 
-    public function getStyle() {
-        return $this->Styles;
-    }
+	public function getStyle() {
+		return $this->Styles;
+	}
 
-    public function renderStyle() {
-        return implode(PHP_EOL, $this->Styles);
-    }
+	public function renderStyle() {
+		return implode(PHP_EOL, $this->Styles);
+	}
 
 }

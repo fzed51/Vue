@@ -21,6 +21,7 @@ nbproject/
 ### Composer ###
 # ----------
 composer.bat
+composer.lock
 composer/
 vendor/
 

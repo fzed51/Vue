@@ -26,37 +26,51 @@
 
 namespace Core\Vue;
 
+if (!defined('WEBROOT')) {
+	define('DS', DIRECTORY_SEPARATOR);
+	define('WS', '/');
+	define('ROOT', __DIR__ . DS);
+	$dir = basename(ROOT);
+	$tabUrl = explode($dir, $_SERVER['REQUEST_URI']);
+	if (count($tabUrl) > 1) {
+		define('WEBROOT', $tabUrl[0] . $dir . WS);
+	} else {
+		define('WEBROOT', WS);
+	}
+}
+
 /**
  *
  * @author fabien.sanchez
  */
 trait TraitVueScript {
 
-    private $Scripts = array();
+	static $DossierScript = __DIR__ . '\..\..\script';
+	private $Scripts = array();
 
-    public function addScript($script) {
-        $key = md5($script);
-        $this->Scripts[$key] = '<script type="text/javascript" >' . $script . '</script>';
-        return $this;
-    }
+	public function addScript($script) {
+		$key = md5($script);
+		$this->Scripts[$key] = '<script type="text/javascript" >' . $script . '</script>';
+		return $this;
+	}
 
-    public function addFileScript($fileName) {
-        $key = md5($fileName);
-        $path_file = $fileName . '.css';
-        $web_file = concatPath(WEBROOT . '/style', $path_file, WS);
-        $sys_file = concatPath(ROOT . '/style', $path_file, DS);
-        if (file_exists($sys_file)) {
-            $this->Scripts[$key] = '<script type="text/javascript" src="' . $web_file . '"></script>';
-        }
-        return $this;
-    }
+	public function addFileScript($fileName) {
+		$key = md5($fileName);
+		$path_file = $fileName . '.js';
+		$web_file = concatPath(WEBROOT . '/script', $path_file, WS);
+		$sys_file = concatPath(static::$DossierScript, $path_file, DS);
+		if (file_exists($sys_file)) {
+			$this->Scripts[$key] = '<script type="text/javascript" src="' . $web_file . '"></script>';
+		}
+		return $this;
+	}
 
-    public function getScript() {
-        return $this->Scripts;
-    }
+	public function getScript() {
+		return $this->Scripts;
+	}
 
-    public function renderScript() {
-        return implode(PHP_EOL, $this->Scripts);
-    }
+	public function renderScript() {
+		return implode(PHP_EOL, $this->Scripts);
+	}
 
 }

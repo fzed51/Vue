@@ -83,12 +83,12 @@ class Vue
     public function __construct($templatePath = "", $attributes = [])
     {
         $this->templatePath = $templatePath;
-        $this->attributes = $attributes;
+        $this->attributes = array_merge($this->attributes, $attributes);
     }
 
     public function render($template, array $data = [])
     {
-        return templateToString($template, $data);
+        return $this->templateToString($template, $data);
     }
 
     /**
@@ -166,10 +166,10 @@ class Vue
         $fullData = array_merge($this->attributes, $data);
         $this->levelStartObcache = ob_get_level();
         $this->startSection($this->courentSection);
-        $this->protectedIncludeScope($this->templatePath . $template, $fullData);
+        $this->protectedIncludeScope($templateFullName, $fullData);
         $output = $this->endSection(true);
         while (ob_get_level() > $this->levelStartObcache) {
-            ob_clean();
+            ob_end_clean();
         }
 
         if (!empty($this->layout)) {
@@ -198,9 +198,10 @@ class Vue
      */
     protected function getTemplateFullName($templateName)
     {
-        return rtrim($this->templatePath, DIRECTORY_SEPARATOR) .
+        $tmpFullName = rtrim($this->templatePath, DIRECTORY_SEPARATOR) .
                 DIRECTORY_SEPARATOR . str_replace('.', DIRECTORY_SEPARATOR, $templateName) .
                 $this->attributes['extension'];
+        return preg_replace("/[\\/\\\\]+(?:\\.[\\/\\\\]+)*/", DIRECTORY_SEPARATOR, $tmpFullName);
     }
 
     /**

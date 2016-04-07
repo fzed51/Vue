@@ -1,20 +1,20 @@
 {
     "name": "fzed51/vue",
-	"type": "composent-fzed51-core",
     "description": "Vue PHP simple.",
     "license": "MIT",
     "authors": [
         {
-            "name": "fabien.sanchez",
+            "name": "SANCHEZ Fabien",
             "email": "fzed51@users.noreply.github.com"
         }
     ],
     "autoload": {
         "psr-4": {
-            "Core\\Vue\\": "src/"
+            "fzed51\\Vue\\": "./src/"
         }
     },
     "require": {
-        "php": ">=5.6.0"
+        "php": ">=5.6.0",
+        "psr/http-message": "^1.0"
     }
 }

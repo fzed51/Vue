@@ -44,6 +44,9 @@ use RuntimeException;
 class Vue
 {
 
+    const CONTENT = 'content';
+    const C_CONTENT = '<<__CURENT__CONTENT__>>';
+
     /**
      * @var array
      */
@@ -168,6 +171,8 @@ class Vue
         $this->startSection($this->courentSection);
         $this->protectedIncludeScope($templateFullName, $fullData);
         $output = $this->endSection(true);
+        $this->sectionContent[self::CONTENT] = $this->sectionContent[self::C_CONTENT];
+        unset($this->sectionContent[self::C_CONTENT]);
         while (ob_get_level() > $this->levelStartObcache) {
             ob_end_clean();
         }
@@ -221,6 +226,9 @@ class Vue
         if (ob_get_level() <= $this->levelStartObcache) {
             ob_start();
         }
+        if ($name == self::CONTENT) {
+            $name = self::C_CONTENT;
+        }
         $this->courentSection = $name;
         if (!is_null($content)) {
             echo $content;
@@ -241,10 +249,10 @@ class Vue
             // Si la section courante n'est pas définie, on est par défaut dans
             // la section "content". On ajoute à la suite si celle-ci est déjà
             // défine.
-            $this->sectionContent['content'] = isset($this->sectionContent['content']) ?
-                    $this->sectionContent['content'] :
+            $this->sectionContent[self::C_CONTENT] = isset($this->sectionContent[self::C_CONTENT]) ?
+                    $this->sectionContent[self::C_CONTENT] :
                     '';
-            $this->sectionContent['content'] .= $content;
+            $this->sectionContent[self::C_CONTENT] .= $content;
         } else {
             $this->sectionContent[$this->courentSection] = $content;
         }

@@ -218,6 +218,16 @@ class Vue
     }
 
     /**
+     * @param string $subTemplateName
+     * @param array $data
+     */
+    protected function insert($subTemplateName, array $data = [])
+    {
+        $subTemplate = new self($this->templatePath, $this->attributes);
+        echo $subTemplate->render($subTemplateName, $data);
+    }
+
+    /**
      * @param string $name
      * @param string $content
      */
